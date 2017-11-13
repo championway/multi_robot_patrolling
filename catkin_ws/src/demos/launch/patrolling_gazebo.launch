@@ -1,0 +1,13 @@
+<launch>
+	<arg name="veh" default="david"/>
+	<arg name="line" default="patrolling" />
+	<!-- start basic args -->
+	<include file="$(find demos)/launch/master_patrolling_gazebo.launch">
+		<arg name="veh" value="$(arg veh)"/>
+		<arg name="visualization" default="true" />
+		<arg name="verbose" default="true" />
+		<arg name="param_file_name" default="default" />
+		<arg name="anti_instagram" default="true" />
+		<arg name="line_detector_param_file_name" value="$(arg line)" />
+	</include>
+</launch>

@@ -1,0 +1,23 @@
+camera_matrix:
+  cols: 3
+  data: [337.29251576420444, 0.0, 321.71609500150976, 0.0, 339.92793155734313, 250.31332444055215,
+    0.0, 0.0, 1.0]
+  rows: 3
+camera_name: car13/camera_node
+distortion_coefficients:
+  cols: 5
+  data: [-0.2759669440367236, 0.054177731716521224, -0.001432708428583881, 0.000159701096642748,
+    0.0]
+  rows: 1
+distortion_model: plumb_bob
+image_height: 480
+image_width: 640
+projection_matrix:
+  cols: 4
+  data: [228.48870849609375, 0.0, 320.82152693602256, 0.0, 0.0, 280.7506408691406,
+    253.53528150763486, 0.0, 0.0, 0.0, 1.0, 0.0]
+  rows: 3
+rectification_matrix:
+  cols: 3
+  data: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+  rows: 3

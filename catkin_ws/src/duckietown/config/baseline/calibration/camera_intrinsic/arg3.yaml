@@ -1,0 +1,23 @@
+camera_matrix:
+  cols: 3
+  data: [323.6971009890325, 0.0, 314.4071261017563, 0.0, 325.7613332547855, 223.86660867286722,
+    0.0, 0.0, 1.0]
+  rows: 3
+camera_name: arg3/camera_node
+distortion_coefficients:
+  cols: 5
+  data: [-0.287058842934126, 0.060828517027102146, 0.0027207920892723973, 0.0010201523469533758,
+    0.0]
+  rows: 1
+distortion_model: plumb_bob
+image_height: 480
+image_width: 640
+projection_matrix:
+  cols: 4
+  data: [226.7318115234375, 0.0, 314.96690683689667, 0.0, 0.0, 260.5721740722656,
+    217.55933962318704, 0.0, 0.0, 0.0, 1.0, 0.0]
+  rows: 3
+rectification_matrix:
+  cols: 3
+  data: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+  rows: 3
