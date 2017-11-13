@@ -3,7 +3,6 @@ import rospy
 import numpy as np
 import math
 import cv2
-from duckietown_utils.jpg import image_cv_from_jpg
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from duckietown_msgs.msg import  Twist2DStamped, BoolStamped
@@ -44,7 +43,6 @@ class JoyMapper(object):
         self.pub_pressX = rospy.Publisher("~press_X",BoolStamped,queue_size=1)
         self.pub_pressY = rospy.Publisher("~press_Y",BoolStamped,queue_size=1)
         self.pub_car_twist = rospy.Publisher("/cmd_vel",Twist,queue_size=1)
-        self.save_image = rospy.Subscriber("~image", CompressedImage, self.cbImage, queue_size=1)
 #        self.pub_picture = rospy.Subscriber("~photo",sensor_msgs,queue_size=1))
         # Subscriptions
         self.sub_joy_ = rospy.Subscriber("joy", Joy, self.cbJoy, queue_size=1)
@@ -61,10 +59,6 @@ class JoyMapper(object):
         pub_msg.data = self.state_parallel_autonomy
         pub_msg.header.stamp = self.last_pub_time
         self.pub_parallel_autonomy.publish(pub_msg)
-
-    def cbImage(self,msg):
-        image_cv = image_cv_from_jpg(msg.data)
-        self.pic = image_cv
 
     def cbParamTimer(self,event):
         self.v_gain = rospy.get_param("~speed_gain", 1.0)
@@ -126,39 +120,14 @@ class JoyMapper(object):
             parallel_autonomy_msg.header.stamp = self.joy.header.stamp
             parallel_autonomy_msg.data = self.state_parallel_autonomy
             self.pub_parallel_autonomy.publish(parallel_autonomy_msg)
-            """
-        elif (joy_msg.buttons[3] == 1):
-            pressY_msg = BoolStamped()
-            rospy.loginfo('Press "Y"')
-            rospy.loginfo('HELLO WORLD~~~~~~~')
-            pressY_msg.header.stamp = self.joy.header.stamp
-            pressY_msg.data = True 
-            self.pub_pressY.publish(pressY_msg)
-        elif (joy_msg.buttons[2] == 1):
-            pressX_msg = BoolStamped()
-            #raspistill -t 1000 -o out1.jpg
-            rospy.loginfo('Press "X"')
-            rospy.loginfo('Let us take a picture~~~~~~~')
-            cv2.imwrite("/home/ubuntu/duckietown/demo"+".jpg",self.pic)
-            #cv2_img = bridge.imgmsg_to_cv2(msg, "bgr8")
-            pressX_msg.header.stamp = self.joy.header.stamp
-            pressX_msg.data = True 
-            self.pub_pressX.publish(pressX_msg)
-            """
         elif (joy_msg.buttons[3] == 1):
             closeled_msg = BoolStamped()
             closeled_msg.header.stamp = self.joy.header.stamp
             rospy.loginfo('Press "Y"')
         elif (joy_msg.buttons[2] == 1):
             pressX_msg = BoolStamped()
-            #raspistill -t 1000 -o out1.jpg
             rospy.loginfo('Press "X"')
             rospy.loginfo('Select "arg1"')
-            #self.robot = "car13"
-            #self.MultiRobot()
-            #pressX_msg.header.stamp = self.joy.header.stamp
-            #pressX_msg.data = True 
-            #self.pub_pressX.publish(pressX_msg)
         elif (joy_msg.buttons[8] == 1): #power button (middle)
             e_stop_msg = BoolStamped()
             e_stop_msg.header.stamp = self.joy.header.stamp

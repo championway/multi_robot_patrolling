@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import rospy
 import numpy as np
-from duckietown_msgs.msg import SegmentList, Segment, BoolStamped, StopLineReading, LanePose, FSMState, PatrolBot
+from duckietown_msgs.msg import SegmentList, Segment, BoolStamped, StopLineReading, LanePose, FSMState
+from patrolling_msgs.msg import PatrolBot
 from std_msgs.msg import Float32
 from geometry_msgs.msg import Point
 import time
