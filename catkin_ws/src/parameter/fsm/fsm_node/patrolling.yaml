@@ -1,0 +1,190 @@
+# Initail state of the FSM
+initial_state: "JOYSTICK_CONTROL"
+
+events: #Maps from subscribing topic to signal ids
+  joystick_override_on: 
+    topic: "joy_mapper_node/joystick_override"
+    msg_type: "BoolStamped"
+    trigger: True
+  pressBK:
+    topic: "joy_mapper_node/press_BK"
+    msg_type: "BoolStamped"
+    trigger: True
+  pressA: 
+    topic: "joy_mapper_node/press_A"
+    msg_type: "BoolStamped"
+    trigger: True
+  pressB: 
+    topic: "joy_mapper_node/press_B"
+    msg_type: "BoolStamped"
+    trigger: True
+  pressY:
+    topic: "joy_mapper_node/press_Y"
+    msg_type: "BoolStamped"
+    trigger: True
+  notpressY:
+    topic: "joy_mapper_node/press_Y"
+    msg_type: "BoolStamped"
+    trigger: False
+  joystick_override_off: 
+    topic: "joy_mapper_node/joystick_override"
+    msg_type: "BoolStamped"
+    trigger: False
+  time_is_up:
+    topic: "timer_node/time_is_up"
+    msg_type: "BoolStamped"
+    trigger: True
+  forward:
+    topic: "timer_node/forward"
+    #topic: "timer_node/command"
+    msg_type: "BoolStamped"
+    #msg_type: Int8
+    trigger: True
+    #trigger: 1
+  backward:
+    topic: "timer_node/backward"
+    #topic: "timer_node/command"
+    msg_type: "BoolStamped"
+    #msg_type: Int8
+    trigger: True
+    #trigger: 2
+  at_stop_line:
+    topic: "stop_line_filter_node/at_stop_line"
+    msg_type: "BoolStamped"
+    trigger: True
+  turn_around:
+    topic: "apriltags_postprocessing_node/turn_around"
+    msg_type: "BoolStamped"
+    trigger: True
+  turn_right:
+    topic: "apriltags_postprocessing_node/turn_right"
+    msg_type: "BoolStamped"
+    trigger: True
+  turn_left:
+    topic: "apriltags_postprocessing_node/turn_left"
+    msg_type: "BoolStamped"
+    trigger: True
+  #detected:
+    #topic: "apriltags_postprocessing_node/detected"
+    #msg_type: "BoolStamped"
+    #trigger: True
+  stop_around:
+    topic: "car_cmd_switch_node/stop_around"
+    msg_type: "BoolStamped"
+    trigger: True
+    
+
+# Define global transitions. Available from all states.
+global_transitions:
+  joystick_override_on: "JOYSTICK_CONTROL"
+  parallel_autonomy_off: "JOYSTICK_CONTROL"
+
+# Define nodes 
+nodes:
+  decoder_node: "decoder_node/switch"
+  apriltag_node: "apriltag_detector_node/switch"
+  line_detector_node: "line_detector_node/switch"
+  lane_filter_node: "lane_filter_node/switch"
+  stop_line_filter_node: "stop_line_filter_node/switch"
+  framerate_high: "camera_node/framerate_high_switch"
+  timer: "timer_node/switch"
+
+# Define state transitions
+states:
+  JOYSTICK_CONTROL:
+    transitions:
+      pressA: "JOYSTICK_CONTROL"
+      pressB: "LANE_FOLLOWING"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - framerate_high
+      - decoder_node
+      - apriltag_node
+    lights: ["joystick"]
+
+  LANE_FOLLOWING:
+    transitions:
+      pressA: "JOYSTICK_CONTROL"
+      pressBK: "JOYSTICK_CONTROL"
+      at_stop_line: "WAIT_FOR_TURN"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - stop_line_filter_node
+      - decoder_node
+      - apriltag_node
+    lights: ["lane_following"]
+
+  WAIT_FOR_TURN:
+    transitions:
+      #time_is_up: "START_TO_TURN"
+      forward: "LANE_FOLLOWING"
+      backward: "TURN_AROUND"
+      pressA: "JOYSTICK_CONTROL"
+      pressBK: "JOYSTICK_CONTROL"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - decoder_node
+      - apriltag_node
+      - timer
+    lights: ["lane_following"]
+
+  START_TO_TURN:
+    transitions:
+      turn_around: "TURN_AROUND"
+      turn_right: "LANE_FOLLOWING_TURN_RIGHT"
+      turn_left: "LANE_FOLLOWING_TURN_LEFT"
+      pressBK: "JOYSTICK_CONTROL"
+      pressA: "JOYSTICK_CONTROL"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - decoder_node
+      - apriltag_node
+      - timer
+    lights: ["lane_following"]
+
+  LANE_FOLLOWING_TURN_LEFT:
+    transitions:
+      pressA: "JOYSTICK_CONTROL"
+      time_is_up: "LANE_FOLLOWING"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - timer
+    lights: ["lane_following"]
+
+  LANE_FOLLOWING_TURN_RIGHT:
+    transitions:
+      pressA: "JOYSTICK_CONTROL"
+      time_is_up: "LANE_FOLLOWING"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - timer
+    lights: ["lane_following"]
+
+  TURN_AROUND:
+    transitions:
+      pressBK: "JOYSTICK_CONTROL"
+      pressA: "JOYSTICK_CONTROL"
+      time_is_up: "LANE_FOLLOWING"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - timer
+    lights: ["lane_following"]
+
+  CLOSE_TO_INTERSECTION:
+    transitions:
+      pressA: "JOYSTICK_CONTROL"
+      at_stop_line: "WAIT_FOR_TURN"
+    active_nodes:
+      - lane_filter_node
+      - line_detector_node
+      - stop_line_filter_node
+      - decoder_node
+      - apriltag_node
+    lights: ["lane_following"]
