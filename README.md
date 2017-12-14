@@ -1,5 +1,14 @@
 # Multi-Robot Patrolling
 
+## Pre-work
+
+### Add hosts
+
+```
+$ sudo vim hosts
+```
+add master [IP_of master] master.local
+
 ## Installation
 
 ### Dependencies
@@ -16,6 +25,7 @@ Note:
 $ git clone https://github.com/championway/multi_robot_patrolling
 $ cd multi_robot_patrolling
 $ source environment.sh
+$ source set_ros_master.sh master
 $ cd catkin_ws
 $ catkin_make
 ```
