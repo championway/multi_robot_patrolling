@@ -42,3 +42,6 @@ $ roslaunch master master_node.launch p_num:=[number_of_patrolling_node]
 ```
 $ roslaunch demo patrolling.launch veh:=[your_robot_name]
 ```
+
+## Videos
+- https://www.youtube.com/watch?v=LBNLh2tFeTg&list=PL4u9dwf2lHUjpb5ASN0IdUQNEQFX7z83g
